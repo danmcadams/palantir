@@ -1,0 +1,11 @@
+services:
+  markdown-server:
+    build: .
+    ports:
+      - "0.0.0.0:8181:8181"
+    volumes:
+      - ./app:/var/www/app
+      - ./docs:/var/www/docs
+    working_dir: /var/www/app
+    command: php -S 0.0.0.0:8181 -t /var/www/app
+    restart: unless-stopped

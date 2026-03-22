@@ -1,0 +1,237 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    display: flex;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #222;
+    background: #fff;
+    line-height: 1.6;
+}
+
+/* ── Sidebar ─────────────────────────────────────────── */
+
+#sidebar {
+    width: 260px;
+    min-width: 260px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    background: #1e1e2e;
+    color: #cdd6f4;
+    overflow-y: auto;
+}
+
+.sidebar-header {
+    padding: 1.25rem 1rem 1rem;
+    border-bottom: 1px solid #313244;
+    flex-shrink: 0;
+}
+
+.sidebar-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #cba6f7;
+    text-decoration: none;
+}
+
+.sidebar-title:hover {
+    color: #f5c2e7;
+}
+
+#sidebar nav {
+    padding: 0.5rem 0;
+    flex: 1;
+}
+
+.sidebar-empty {
+    padding: 0.75rem 1rem;
+    font-size: 0.82rem;
+    color: #6c7086;
+    font-style: italic;
+}
+
+/* ── Sidebar Tree ────────────────────────────────────── */
+
+ul.tree,
+ul.tree ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul.tree li a {
+    display: block;
+    padding: 0.3rem 1rem 0.3rem 1.25rem;
+    font-size: 0.875rem;
+    color: #cdd6f4;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-left: 2px solid transparent;
+}
+
+ul.tree li a:hover {
+    background: #313244;
+    color: #fff;
+}
+
+ul.tree li.active > a {
+    color: #cba6f7;
+    border-left-color: #cba6f7;
+    background: #2a2a3e;
+}
+
+/* Directory nodes */
+ul.tree li.dir > details > summary {
+    display: block;
+    padding: 0.3rem 1rem 0.3rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #a6adc8;
+    cursor: pointer;
+    user-select: none;
+    list-style: none;
+}
+
+ul.tree li.dir > details > summary::-webkit-details-marker { display: none; }
+
+ul.tree li.dir > details > summary::before {
+    content: '▶';
+    display: inline-block;
+    font-size: 0.6rem;
+    margin-right: 0.4rem;
+    transition: transform 0.15s;
+    vertical-align: middle;
+}
+
+ul.tree li.dir > details[open] > summary::before {
+    transform: rotate(90deg);
+}
+
+ul.tree li.dir > details > summary:hover {
+    color: #cdd6f4;
+    background: #313244;
+}
+
+/* Nested directories indent */
+ul.tree ul {
+    padding-left: 0.75rem;
+}
+
+ul.tree ul li a {
+    padding-left: 1.5rem;
+}
+
+ul.tree ul ul li a {
+    padding-left: 2rem;
+}
+
+/* ── Main Content ────────────────────────────────────── */
+
+#content {
+    flex: 1;
+    padding: 2.5rem 3rem;
+    max-width: 860px;
+    overflow-y: auto;
+    min-height: 100vh;
+}
+
+.home h1 {
+    font-size: 1.6rem;
+    margin: 0 0 0.5rem;
+}
+
+.home p {
+    color: #666;
+}
+
+/* ── Markdown Content ────────────────────────────────── */
+
+article h1 { font-size: 1.8rem; margin: 0 0 1.25rem; }
+article h2 { font-size: 1.3rem; margin: 2rem 0 0.6rem; padding-bottom: 0.3rem; border-bottom: 1px solid #eee; color: #333; }
+article h3 { font-size: 1.1rem; margin: 1.5rem 0 0.4rem; }
+article h4 { font-size: 1rem; margin: 1.25rem 0 0.3rem; color: #444; }
+
+article p { margin: 0.75rem 0; }
+
+article a { color: #7c3aed; text-decoration: none; }
+article a:hover { text-decoration: underline; }
+
+article ul, article ol {
+    padding-left: 1.5rem;
+    margin: 0.5rem 0 1rem;
+}
+
+article li { margin: 0.3rem 0; }
+
+article pre {
+    background: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: 0.875rem;
+}
+
+article code {
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.875em;
+    background: #f6f8fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 3px;
+    padding: 0.1em 0.35em;
+}
+
+article pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: inherit;
+}
+
+article blockquote {
+    border-left: 4px solid #d0d7de;
+    margin: 1rem 0;
+    padding: 0.25rem 1rem;
+    color: #57606a;
+}
+
+article table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+article th, article td {
+    border: 1px solid #d0d7de;
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+}
+
+article th {
+    background: #f6f8fa;
+    font-weight: 600;
+}
+
+article hr {
+    border: none;
+    border-top: 1px solid #e1e4e8;
+    margin: 2rem 0;
+}
+
+.empty {
+    color: #888;
+    font-style: italic;
+}
