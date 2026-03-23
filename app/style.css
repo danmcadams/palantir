@@ -1,5 +1,7 @@
 *, *::before, *::after { box-sizing: border-box; }
 
+.notransition, .notransition * { transition: none !important; }
+
 html, body {
     height: 100%;
     margin: 0;

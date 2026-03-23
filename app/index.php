@@ -145,11 +145,12 @@ if ($requestedFile !== null) {
         const KEY = 'sidebar-open';
         const saved = JSON.parse(localStorage.getItem(KEY) || '[]');
 
+        // Suppress CSS transitions while restoring open state so dirs don't animate on load
+        document.documentElement.classList.add('notransition');
+
         document.querySelectorAll('details[data-path]').forEach(function (el) {
-            // Restore any previously-opened dirs (server already opens the active one)
             if (saved.includes(el.dataset.path)) el.open = true;
 
-            // Persist state when user manually toggles a dir
             el.addEventListener('toggle', function () {
                 const current = JSON.parse(localStorage.getItem(KEY) || '[]');
                 const path = el.dataset.path;
@@ -157,6 +158,13 @@ if ($requestedFile !== null) {
                 if (el.open && idx === -1) current.push(path);
                 if (!el.open && idx !== -1) current.splice(idx, 1);
                 localStorage.setItem(KEY, JSON.stringify(current));
+            });
+        });
+
+        // Re-enable transitions after two frames (ensures browser has painted first)
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                document.documentElement.classList.remove('notransition');
             });
         });
     })();
