@@ -229,8 +229,8 @@ body {
 }
 
 .sidebar-collapsed #sidebar {
-    width: 40px;
-    min-width: 40px;
+    width: 52px;
+    min-width: 52px;
     overflow: hidden;
 }
 
@@ -287,31 +287,31 @@ body {
 
 /* ── Settings ────────────────────────────────────────── */
 
+.sidebar-footer {
+    padding: 0.6rem 0.75rem;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-start;
+    margin-top: auto;
+}
+
 .settings-btn {
-    position: fixed;
-    bottom: 1rem;
-    left: 1rem;
-    z-index: 200;
-    width: 34px;
-    height: 34px;
-    border-radius: 8px;
-    border: 1px solid var(--settings-border);
-    background: var(--settings-bg);
-    color: var(--settings-gear-color);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--sidebar-toggle-color);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    transition: background 0.15s, color 0.15s;
 }
 
 .settings-btn:hover {
-    background: var(--settings-gear-hover-bg);
-    color: var(--settings-color);
-}
-
-.sidebar-collapsed .settings-btn {
-    left: 3.25rem;
+    background: var(--sidebar-toggle-hover-bg);
+    color: var(--sidebar-toggle-hover-color);
 }
 
 .settings-panel {
@@ -333,9 +333,6 @@ body {
     transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
-.sidebar-collapsed .settings-panel {
-    left: 3.25rem;
-}
 
 .settings-panel.is-open {
     transform: scale(1) translateY(0);
