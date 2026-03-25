@@ -43,5 +43,23 @@ if (preg_match('#^/docs/(.+)$#', $uri, $m)) {
     exit;
 }
 
+// Serve raw file content as plain text
+if ($uri === '/raw') {
+    $requested = $_GET['file'] ?? null;
+    if ($requested === null) {
+        http_response_code(400);
+        exit;
+    }
+    $fullPath = realpath('/var/www/docs/' . $requested);
+    if ($fullPath === false || strpos($fullPath, '/var/www/docs/') !== 0 || !is_file($fullPath)) {
+        http_response_code(404);
+        exit;
+    }
+    header('Content-Type: text/plain; charset=utf-8');
+    header('Content-Length: ' . filesize($fullPath));
+    readfile($fullPath);
+    exit;
+}
+
 // Everything else goes to index.php
 require __DIR__ . '/index.php';

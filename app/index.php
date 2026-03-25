@@ -263,7 +263,9 @@ if ($requestedFile !== null) {
         <?php if ($requestedFile !== null && !$error): ?>
         <div id="doc-bar">
             <span id="doc-bar-crumb"></span>
-            <span id="doc-bar-type"><?= $title ?>.<?= htmlspecialchars(strtolower($ext)) ?></span>
+            <?php $nativeTypes = ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg']; ?>
+            <?php $docBarHref = in_array(strtolower($ext), $nativeTypes) ? '/docs/' . htmlspecialchars($requestedFile) : '/raw?file=' . urlencode($requestedFile); ?>
+            <a id="doc-bar-type" href="<?= $docBarHref ?>" target="_blank" rel="noopener"><?= $title ?>.<?= htmlspecialchars(strtolower($ext)) ?></a>
         </div>
         <?php endif; ?>
     </div>
@@ -381,7 +383,7 @@ if ($requestedFile !== null) {
         var html = document.documentElement;
         function isCollapsed() { return html.classList.contains('sidebar-collapsed'); }
         function updateBtn() {
-            btn.textContent = isCollapsed() ? '›' : '‹';
+            btn.textContent = isCollapsed() ? '→' : '_';
             btn.title = isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar';
             btn.setAttribute('aria-label', isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar');
         }

@@ -14,66 +14,55 @@ Files appear in the sidebar immediately — no server restart needed. The sideba
 
 ## Organizing with Subdirectories
 
-This server is used for multiple planning efforts. Each project gets its own top-level subfolder under `docs/`. The sidebar renders them as collapsible sections.
+Each project gets its own top-level subfolder under `docs/`. The sidebar renders them as collapsible sections. Nesting works to arbitrary depth.
 
 ```
 docs/
-├── cems-q2/                    # CEMS Q2 2026 quarterly planning
-│   ├── q2-2026-overview.md     # strategy, priorities, success criteria
-│   ├── tracker.md              # ← live status; update when work completes or blockers emerge
-│   ├── roadmap.md              # multi-quarter cems-api upgrade roadmap
-│   ├── service-matrix.md       # side-by-side service comparison
-│   ├── services/               # one file per service: current state + Q2 plan
-│   │   ├── cems-api.md
-│   │   ├── cems-api-upgrade-plan.md   # full 5-phase reference (25–48 wks)
-│   │   ├── c3.md               # C3 Shopify sync service + SQS integration
-│   │   ├── c3-worker-plan.md   # plan: persistent worker service (not yet implemented)
-│   │   ├── dts.md
-│   │   └── fms.md
-│   └── initiatives/            # cross-cutting initiatives
-│       ├── ai-infrastructure.md
-│       └── ops-simplification.md
-├── cems-q3/                    # CEMS Q3 2026 — cems-api Phase 1 focus
-│   ├── q3-2026-overview.md
+├── project-alpha/
+│   ├── overview.md
 │   └── tracker.md
-└── <future-project>/
-    └── ...
+└── project-beta/
+    ├── overview.md
+    └── services/
+        └── api.md
 ```
 
-## Quarterly Planning
-
-Planning is organized by quarter under `docs/`. Each quarter has its own folder.
-
-**Q2 2026** (`docs/cems-q2/`) — Current quarter. Priorities: DTS upgrade, cems-api Phase 0, FMS bump, C3 SQS integration.
-**Q3 2026** (`docs/cems-q3/`) — cems-api Phase 1 (Symfony 3.4 + PHP 8.0).
-
-When doing any quarter-related work:
-
-- Check the relevant quarter's `tracker.md` for current initiative status and next actions
-- Update `tracker.md` when steps complete, blockers are discovered, or status changes
-- Check the relevant `services/` file before starting work on a service
-
-When adding a new planning effort, create a new top-level folder under `docs/`. Nest further with subdirectories as needed — the sidebar supports arbitrary depth.
-
-## Source of Truth Rules
-
-These rules prevent docs from going stale and contradicting each other:
-
-| What | Lives in | Everyone else does |
-|------|----------|--------------------|
-| Initiative status, checklists, next actions | `tracker.md` | Link to tracker — do not repeat |
-| Service tech stack, architecture, gotchas | `services/<name>.md` | Link — do not repeat |
-| Side-by-side version/EOL comparison | `service-matrix.md` | Link — do not repeat |
-| Multi-quarter roadmap | `roadmap.md` | Link — do not repeat |
-| Initiative rationale and approach | `initiatives/<name>.md` | Tracker links to it |
-
-**After any work session on CEMS services:** update `tracker.md` to reflect what changed. That's the only doc that needs touching for status updates — other docs stay correct because they link rather than copy.
+When adding a new planning effort, create a new top-level folder under `docs/`. Nest further with subdirectories as needed.
 
 ## File Naming
 
 - Use lowercase, hyphen-separated names: `user-auth-flow.md`, `data-model.md`
 - The sidebar strips the `.md` extension and uses the filename as the label
 - Directory names become section headers in the sidebar (also hyphen-separated is fine)
+
+## Linking Between Documents
+
+Use `/?file=` links to link from one doc to another:
+
+```markdown
+See the [tracker](/?file=my-project/tracker.md) for current status.
+```
+
+| Path | Link |
+|------|------|
+| `overview.md` | `/?file=overview.md` |
+| `my-project/tracker.md` | `/?file=my-project/tracker.md` |
+| `my-project/services/api.md` | `/?file=my-project/services/api.md` |
+
+## Adding Images
+
+Drop image files anywhere under `docs/` and reference them with a `/docs/` prefix:
+
+```markdown
+![alt text](/docs/path/to/image.png)
+![diagram](/docs/my-project/architecture.svg)
+```
+
+**Supported formats:** PNG, JPG, GIF, WebP, SVG, ICO
+
+## Source of Truth Rule
+
+To keep docs from going stale: **one doc owns each piece of information, everyone else links to it.** Don't copy status or facts across files — just link.
 
 ## Managing the Server
 
