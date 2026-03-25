@@ -61,10 +61,13 @@ function render_tree(array $tree, string $activeFile, string $prefix = ''): void
     }
 
     foreach ($files as $node) {
-        $active = ($node['path'] === $activeFile) ? ' class="active"' : '';
-        $label  = htmlspecialchars(preg_replace('/\.(md|txt)$/', '', $node['name']));
-        $href   = '/?file=' . urlencode($node['path']);
-        echo '<li' . $active . '><a href="' . $href . '">' . $label . '</a></li>';
+        $isActive = $node['path'] === $activeFile;
+        $active   = $isActive ? ' class="active"' : '';
+        $label    = htmlspecialchars(preg_replace('/\.(md|txt)$/', '', $node['name']));
+        $fileext  = htmlspecialchars('.' . pathinfo($node['name'], PATHINFO_EXTENSION));
+        $href     = '/?file=' . urlencode($node['path']);
+        $dataext  = $isActive ? ' data-ext="' . $fileext . '"' : '';
+        echo '<li' . $active . $dataext . '><a href="' . $href . '">' . $label . '</a></li>';
     }
 }
 
@@ -84,7 +87,7 @@ $requestedFile = $_GET['file'] ?? null;
 
 // Validate requested file
 $content = '';
-$title   = 'Planning';
+$title   = 'DGIST';
 $error   = false;
 
 if ($requestedFile !== null) {
@@ -128,7 +131,7 @@ if ($requestedFile !== null) {
 <body>
     <aside id="sidebar">
         <div class="sidebar-header">
-            <a href="/" class="sidebar-title">Planning</a>
+            <a href="/" class="sidebar-title">DGIST</a>
             <button id="sidebar-toggle" class="sidebar-toggle" title="Collapse sidebar" aria-label="Collapse sidebar">‹</button>
         </div>
         <nav>
@@ -140,31 +143,55 @@ if ($requestedFile !== null) {
                 </ul>
             <?php endif; ?>
         </nav>
-        <div class="sidebar-footer">
-            <div class="theme-switch-wrap">
-                <span class="theme-icon">☀</span>
-                <button id="theme-toggle" role="switch" class="theme-switch" aria-checked="false" aria-label="Toggle dark mode">
-                    <span class="switch-thumb"></span>
-                </button>
-                <span class="theme-icon">☾</span>
-            </div>
-        </div>
     </aside>
 
-    <main id="content">
-        <?php if ($error): ?>
-            <p class="empty">File not found.</p>
-        <?php elseif ($requestedFile !== null): ?>
-            <article>
-                <?= $content ?>
-            </article>
-        <?php else: ?>
-            <div class="home">
-                <h1>Planning</h1>
-                <p>Select a file from the sidebar to get started.</p>
-            </div>
+    <div class="theme-switch-wrap" id="theme-switch-fixed">
+        <span class="theme-icon">☀</span>
+        <button id="theme-toggle" role="switch" class="theme-switch" aria-checked="false" aria-label="Toggle dark mode">
+            <span class="switch-thumb"></span>
+        </button>
+        <span class="theme-icon">☾</span>
+    </div>
+    <div id="main">
+        <main id="content">
+            <?php if ($error): ?>
+                <p class="empty">File not found.</p>
+            <?php elseif ($requestedFile !== null): ?>
+                <article data-ext="<?= htmlspecialchars(strtolower($ext)) ?>">
+                    <?= $content ?>
+                </article>
+            <?php else: ?>
+                <div class="home">
+                    <div class="home-logo">DGIST</div>
+                    <p class="home-tagline">your documents, organized and readable.</p>
+                    <div class="home-hints">
+                        <div class="home-hint">
+                            <span class="hint-key">←</span>
+                            <span>pick a file from the sidebar</span>
+                        </div>
+                        <div class="home-hint">
+                            <span class="hint-key">drop</span>
+                            <span>any <code>.md</code> or <code>.txt</code> into <code>docs/</code> to add it</span>
+                        </div>
+                        <div class="home-hint">
+                            <span class="hint-key">nest</span>
+                            <span>subdirectories become collapsible sections</span>
+                        </div>
+                        <div class="home-hint">
+                            <span class="hint-key">img</span>
+                            <span>reference images as <code>/docs/path/to/image.png</code></span>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+        </main>
+        <?php if ($requestedFile !== null && !$error): ?>
+        <div id="doc-bar">
+            <span id="doc-bar-crumb"></span>
+            <span id="doc-bar-type"><?= $title ?>.<?= htmlspecialchars(strtolower($ext)) ?></span>
+        </div>
         <?php endif; ?>
-    </main>
+    </div>
     <script>
     (function () {
         const KEY = 'sidebar-open';
@@ -222,6 +249,43 @@ if ($requestedFile !== null) {
             html.classList.toggle('sidebar-collapsed');
             localStorage.setItem('sidebar-collapsed', isCollapsed() ? '1' : '0');
             updateBtn();
+        });
+    })();
+
+    (function () {
+        var bar   = document.getElementById('doc-bar');
+        var crumb = document.getElementById('doc-bar-crumb');
+        if (!bar) return;
+
+        var content  = document.getElementById('content');
+        var article  = document.querySelector('article');
+        var headings = Array.from(article.querySelectorAll('h1,h2,h3,h4,h5,h6'));
+
+        // Inject IDs and hover anchor links
+        headings.forEach(function (h) {
+            var slug = h.textContent.trim()
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+            h.id = slug;
+            var a = document.createElement('a');
+            a.className = 'heading-anchor';
+            a.href = '#' + slug;
+            a.innerHTML = h.innerHTML;
+            h.innerHTML = '';
+            h.appendChild(a);
+        });
+
+        // Update crumb with the last heading scrolled past (skip h1)
+        content.addEventListener('scroll', function () {
+            var scrollTop = content.scrollTop + 8;
+            var current = null;
+            headings.forEach(function (h) {
+                if (h.offsetTop <= scrollTop) current = h;
+            });
+            crumb.textContent = (current && current.tagName !== 'H1')
+                ? current.querySelector('.heading-anchor').textContent
+                : '';
         });
     })();
     </script>

@@ -86,7 +86,6 @@ body {
 }
 
 .sidebar-collapsed .sidebar-title,
-.sidebar-collapsed #theme-toggle,
 .sidebar-collapsed #sidebar nav {
     display: none;
 }
@@ -137,18 +136,13 @@ body {
     background: #313244;
 }
 
-/* ── Theme switch (bottom of sidebar) ───────────────── */
+/* ── Theme switch (fixed top-right) ─────────────────── */
 
-.sidebar-footer {
-    padding: 0.875rem 1rem;
-    border-top: 1px solid #313244;
-    display: flex;
-    justify-content: flex-end;
-    flex-shrink: 0;
-}
-
-.sidebar-collapsed .sidebar-footer {
-    display: none;
+#theme-switch-fixed {
+    position: fixed;
+    top: 0.9rem;
+    right: 1.25rem;
+    z-index: 100;
 }
 
 .theme-switch-wrap {
@@ -219,6 +213,10 @@ ul.tree ul {
     padding: 0;
 }
 
+ul.tree li {
+    position: relative;
+}
+
 ul.tree li a {
     display: block;
     padding: 0.3rem 1rem 0.3rem 1.25rem;
@@ -240,6 +238,20 @@ ul.tree li.active > a {
     color: #cba6f7;
     border-left-color: #cba6f7;
     background: #2a2a3e;
+}
+
+ul.tree li.active::after {
+    content: attr(data-ext);
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.72em;
+    color: #585b70;
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    background: #2a2a3e;
+    padding-left: 0.3em;
+    pointer-events: none;
 }
 
 /* Directory nodes */
@@ -291,24 +303,138 @@ ul.tree ul ul li a {
 
 /* ── Main Content ────────────────────────────────────── */
 
+#main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
 #content {
     flex: 1;
-    padding: 2.5rem 3rem;
+    padding: 0 3rem 2.5rem;
     max-width: 860px;
     overflow-y: auto;
-    min-height: 100vh;
 }
 
-.home h1 {
-    font-size: 1.6rem;
-    margin: 0 0 0.5rem;
+/* ── Doc bar ─────────────────────────────────────────── */
+
+#doc-bar {
+    flex-shrink: 0;
+    padding: 0 3rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--body-bg);
+    border-top: 1px solid var(--hr-color);
+    font-size: 0.78rem;
+    color: var(--empty-color);
 }
 
-.home p {
+#doc-bar-crumb {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+#doc-bar-type {
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.72em;
+    flex-shrink: 0;
+    margin-left: 1rem;
+}
+
+/* ── Heading anchors ─────────────────────────────────── */
+
+.heading-anchor {
+    color: inherit;
+    text-decoration: none;
+}
+
+.heading-anchor::after {
+    content: ' #';
+    font-size: 0.65em;
+    font-weight: 400;
+    opacity: 0;
+    color: var(--link-color);
+    transition: opacity 0.15s;
+}
+
+article h1:hover .heading-anchor::after,
+article h2:hover .heading-anchor::after,
+article h3:hover .heading-anchor::after,
+article h4:hover .heading-anchor::after {
+    opacity: 1;
+}
+
+article,
+.home,
+p.empty {
+    padding-top: 2.5rem;
+}
+
+
+.home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    text-align: center;
+    gap: 0.75rem;
+}
+
+.home-logo {
+    font-size: 4rem;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    color: var(--link-color);
+    opacity: 0.85;
+    line-height: 1;
+}
+
+.home-tagline {
+    font-size: 0.95rem;
+    color: var(--home-muted);
+    margin: 0 0 2rem;
+}
+
+.home-hints {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    text-align: left;
+}
+
+.home-hint {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    font-size: 0.85rem;
     color: var(--home-muted);
 }
 
+.hint-key {
+    font-family: ui-monospace, SFMono-Regular, monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--link-color);
+    opacity: 0.7;
+    min-width: 2.5rem;
+    text-align: right;
+    flex-shrink: 0;
+}
+
 /* ── Markdown Content ────────────────────────────────── */
+
+article {
+    position: relative;
+}
+
+
 
 article h1 { font-size: 1.8rem; margin: 0 0 1.25rem; }
 article h2 { font-size: 1.3rem; margin: 2rem 0 0.6rem; padding-bottom: 0.3rem; border-bottom: 1px solid var(--h2-border); color: var(--h2-color); }
