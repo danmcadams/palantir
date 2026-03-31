@@ -87,7 +87,7 @@ $requestedFile = $_GET['file'] ?? null;
 
 // Validate requested file
 $content = '';
-$title   = 'Dossier';
+$title   = 'Palantir';
 $error   = false;
 
 if ($requestedFile !== null) {
@@ -135,7 +135,7 @@ if ($requestedFile !== null) {
 <body>
     <aside id="sidebar">
         <div class="sidebar-header">
-            <a href="/" class="sidebar-title">Dossier</a>
+            <a href="/" class="sidebar-title">Palantir</a>
             <button id="sidebar-toggle" class="sidebar-toggle" title="Collapse sidebar" aria-label="Collapse sidebar">‹</button>
         </div>
         <nav>
@@ -236,7 +236,7 @@ if ($requestedFile !== null) {
                         <pre id="manifesto-text" class="manifesto-text"></pre>
                     </div>
                     <div id="default-home">
-                    <div class="home-logo">Dossier</div>
+                    <div class="home-logo">Palantir</div>
                     <p class="home-tagline">your documents, organized and readable.</p>
                     <div class="home-hints">
                         <div class="home-hint">
