@@ -12,7 +12,13 @@ function get_all_files(): array {
     );
     foreach ($it as $f) {
         if (in_array($f->getExtension(), ['md', 'txt', 'pdf'])) {
-            $files[] = str_replace('\\', '/', substr($f->getPathname(), strlen(DOCS_DIR) + 1));
+            $rel   = str_replace('\\', '/', substr($f->getPathname(), strlen(DOCS_DIR) + 1));
+            $parts = explode('/', $rel);
+            $hidden = false;
+            foreach ($parts as $part) {
+                if (str_starts_with($part, '_')) { $hidden = true; break; }
+            }
+            if (!$hidden) $files[] = $rel;
         }
     }
     sort($files);
@@ -172,7 +178,7 @@ if ($requestedFile !== null) {
             <span class="settings-title">Theme</span>
             <button id="settings-close" class="settings-close" aria-label="Close settings">✕</button>
         </div>
-        <a href="/?file=user-guide.md" class="settings-guide-link">User Guide</a>
+        <a href="/?file=_user-guide.md" class="settings-guide-link">User Guide</a>
         <div class="theme-grid">
             <button class="theme-card" data-theme="light" aria-label="Light theme">
                 <div class="theme-card-preview">
@@ -267,7 +273,7 @@ if ($requestedFile !== null) {
                             <span>reference images as <code>/docs/path/to/image.png</code></span>
                         </div>
                     </div>
-                    <a href="/?file=user-guide.md" class="home-guide-link">Using with Claude →</a>
+                    <a href="/?file=_user-guide.md" class="home-guide-link">Using with Claude →</a>
                     </div><!-- /default-home -->
                 </div>
             <?php endif; ?>

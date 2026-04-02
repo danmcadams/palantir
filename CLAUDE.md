@@ -60,6 +60,10 @@ Drop image files anywhere under `docs/` and reference them with a `/docs/` prefi
 
 **Supported formats:** PNG, JPG, GIF, WebP, SVG, ICO
 
+## Hiding Files from the Sidebar
+
+Prefix any file or folder name with `_` to hide it from the sidebar tree. The file is still accessible via direct URL (`/?file=_my-file.md`) — it just won't appear in the nav. Works for both files and directories.
+
 ## Source of Truth Rule
 
 To keep docs from going stale: **one doc owns each piece of information, everyone else links to it.** Don't copy status or facts across files — just link.
