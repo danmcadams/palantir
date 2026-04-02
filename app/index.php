@@ -305,11 +305,8 @@ if ($requestedFile !== null) {
     <?php endif; ?>
 </div>
 <?php if ($hasMermaid ?? false): ?>
-<script type="module">
-    import mermaid from '/vendor/mermaid.esm.min.mjs';
-    window.__mermaid = mermaid;
-    window.dispatchEvent(new Event('mermaid-ready'));
-</script>
+<script src="/vendor/mermaid.min.js"></script>
+<script>window.__mermaid = window.mermaid; window.dispatchEvent(new Event('mermaid-ready'));</script>
 <?php endif; ?>
 <script src="/app.js"></script>
 </body>

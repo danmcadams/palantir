@@ -11,6 +11,19 @@ if ($uri !== '/' && file_exists($appFile) && is_file($appFile)) {
     return false;
 }
 
+// Serve baked-in vendor assets (e.g. mermaid.esm.min.mjs)
+if (preg_match('#^/vendor/(.+)$#', $uri, $m)) {
+    $fullPath = realpath('/var/www/vendor/' . $m[1]);
+    if ($fullPath === false || strpos($fullPath, '/var/www/vendor/') !== 0 || !is_file($fullPath)) {
+        http_response_code(404);
+        exit;
+    }
+    header('Content-Type: application/javascript');
+    header('Content-Length: ' . filesize($fullPath));
+    readfile($fullPath);
+    exit;
+}
+
 // Serve image files from the docs directory
 if (preg_match('#^/docs/(.+)$#', $uri, $m)) {
     $fullPath = realpath('/var/www/docs/' . $m[1]);
