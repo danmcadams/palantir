@@ -516,8 +516,9 @@ ul.tree li.active::after {
 
 /* Directory nodes */
 ul.tree li.dir > details > summary {
-    display: block;
-    padding: 0.3rem 1rem 0.3rem 1rem;
+    display: flex;
+    align-items: center;
+    padding: 0.3rem 0.5rem 0.3rem 1rem;
     font-size: 0.8rem;
     font-weight: 600;
     letter-spacing: 0.04em;
@@ -532,11 +533,10 @@ ul.tree li.dir > details > summary::-webkit-details-marker { display: none; }
 
 ul.tree li.dir > details > summary::before {
     content: '▶';
-    display: inline-block;
+    flex-shrink: 0;
     font-size: 0.6rem;
     margin-right: 0.4rem;
     transition: transform 0.15s;
-    vertical-align: middle;
 }
 
 ul.tree li.dir > details[open] > summary::before {
@@ -546,6 +546,37 @@ ul.tree li.dir > details[open] > summary::before {
 ul.tree li.dir > details > summary:hover {
     color: var(--sidebar-item-color);
     background: var(--sidebar-item-hover-bg);
+}
+
+.dir-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dir-export {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    color: var(--sidebar-dir-color);
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s, color 0.15s;
+    text-decoration: none;
+}
+
+ul.tree li.dir > details > summary:hover .dir-export {
+    opacity: 0.6;
+}
+
+.dir-export:hover {
+    opacity: 1 !important;
+    background: var(--sidebar-toggle-hover-bg);
+    color: var(--sidebar-item-hover-color);
 }
 
 /* Nested directories indent */
@@ -702,6 +733,30 @@ p.empty {
     text-align: right;
     flex-shrink: 0;
 }
+
+.home-guide-link {
+    display: inline-block;
+    margin-top: 1.25rem;
+    font-size: 0.82rem;
+    color: var(--link-color);
+    opacity: 0.7;
+    text-decoration: none;
+}
+
+.home-guide-link:hover { opacity: 1; }
+
+.settings-guide-link {
+    display: block;
+    margin-top: 0.75rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid var(--sidebar-border);
+    font-size: 0.78rem;
+    color: var(--link-color);
+    text-decoration: none;
+    opacity: 0.75;
+}
+
+.settings-guide-link:hover { opacity: 1; }
 
 /* ── Hacker home ─────────────────────────────────────── */
 

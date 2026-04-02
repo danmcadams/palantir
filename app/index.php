@@ -48,11 +48,21 @@ function render_tree(array $tree, string $activeFile, string $prefix = ''): void
     $files = array_filter($tree, fn($n) => $n['type'] === 'file');
 
     foreach ($dirs as $node) {
-        $path = $prefix . '/' . $node['name'];
-        $open = dir_contains_active($node['children'], $activeFile) ? ' open' : '';
+        $path       = $prefix . '/' . $node['name'];
+        $open       = dir_contains_active($node['children'], $activeFile) ? ' open' : '';
+        $exportHref = '/export?folder=' . urlencode(ltrim($path, '/'));
         echo '<li class="dir">';
         echo '<details' . $open . ' data-path="' . htmlspecialchars($path, ENT_QUOTES) . '">';
-        echo '<summary>' . htmlspecialchars($node['name']) . '</summary>';
+        echo '<summary>';
+        echo '<span class="dir-name">' . htmlspecialchars($node['name']) . '</span>';
+        echo '<a class="dir-export" href="' . $exportHref . '" title="Download as zip" onclick="event.stopPropagation()">';
+        echo '<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+        echo '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>';
+        echo '<polyline points="7 10 12 15 17 10"/>';
+        echo '<line x1="12" y1="15" x2="12" y2="3"/>';
+        echo '</svg>';
+        echo '</a>';
+        echo '</summary>';
         echo '<ul>';
         render_tree($node['children'], $activeFile, $path);
         echo '</ul>';
@@ -162,6 +172,7 @@ if ($requestedFile !== null) {
             <span class="settings-title">Theme</span>
             <button id="settings-close" class="settings-close" aria-label="Close settings">✕</button>
         </div>
+        <a href="/?file=user-guide.md" class="settings-guide-link">User Guide</a>
         <div class="theme-grid">
             <button class="theme-card" data-theme="light" aria-label="Light theme">
                 <div class="theme-card-preview">
@@ -256,6 +267,7 @@ if ($requestedFile !== null) {
                             <span>reference images as <code>/docs/path/to/image.png</code></span>
                         </div>
                     </div>
+                    <a href="/?file=user-guide.md" class="home-guide-link">Using with Claude →</a>
                     </div><!-- /default-home -->
                 </div>
             <?php endif; ?>
@@ -269,168 +281,6 @@ if ($requestedFile !== null) {
         </div>
         <?php endif; ?>
     </div>
-    <script>
-    (function () {
-        const KEY = 'sidebar-open';
-        const saved = JSON.parse(localStorage.getItem(KEY) || '[]');
-
-        document.querySelectorAll('details[data-path]').forEach(function (el) {
-            if (saved.includes(el.dataset.path)) el.open = true;
-
-            el.addEventListener('toggle', function () {
-                const current = JSON.parse(localStorage.getItem(KEY) || '[]');
-                const path = el.dataset.path;
-                const idx = current.indexOf(path);
-                if (el.open && idx === -1) current.push(path);
-                if (!el.open && idx !== -1) current.splice(idx, 1);
-                localStorage.setItem(KEY, JSON.stringify(current));
-            });
-        });
-
-        // Re-enable transitions after two frames (ensures browser has painted first)
-        requestAnimationFrame(function () {
-            requestAnimationFrame(function () {
-                document.documentElement.classList.remove('notransition');
-            });
-        });
-    })();
-
-    (function () {
-        var THEMES = ['light', 'dark', 'hacker', 'warm', 'nord'];
-
-        function setTheme(name) {
-            if (!THEMES.includes(name)) return;
-            document.documentElement.setAttribute('data-theme', name);
-            localStorage.setItem('theme', name);
-            updateActiveCard();
-            updateHomeView(name);
-        }
-
-        var manifestoFetched = false;
-        function updateHomeView(theme) {
-            var hackerEl  = document.getElementById('hacker-home');
-            var defaultEl = document.getElementById('default-home');
-            if (!hackerEl) return;
-            if (theme === 'hacker') {
-                defaultEl.style.display = 'none';
-                hackerEl.style.display  = '';
-                if (!manifestoFetched) {
-                    manifestoFetched = true;
-                    fetch('/manifesto.txt')
-                        .then(function(r) { return r.text(); })
-                        .then(function(t) { document.getElementById('manifesto-text').textContent = t; })
-                        .catch(function() { document.getElementById('manifesto-text').textContent = '// connection refused'; });
-                }
-            } else {
-                hackerEl.style.display  = 'none';
-                defaultEl.style.display = '';
-            }
-        }
-
-        updateHomeView(localStorage.getItem('theme') || 'light');
-
-        function updateActiveCard() {
-            var current = localStorage.getItem('theme') || 'light';
-            document.querySelectorAll('.theme-card').forEach(function (card) {
-                card.classList.toggle('is-active', card.dataset.theme === current);
-            });
-        }
-
-        document.querySelectorAll('.theme-card').forEach(function (card) {
-            card.addEventListener('click', function () { setTheme(card.dataset.theme); });
-        });
-
-        updateActiveCard();
-    })();
-
-    (function () {
-        var btn    = document.getElementById('settings-btn');
-        var panel  = document.getElementById('settings-panel');
-        var close  = document.getElementById('settings-close');
-        var isOpen = false;
-
-        function openPanel() {
-            isOpen = true;
-            panel.getBoundingClientRect(); // force reflow
-            panel.classList.add('is-open');
-            btn.setAttribute('aria-expanded', 'true');
-        }
-
-        function closePanel() {
-            isOpen = false;
-            panel.classList.remove('is-open');
-            btn.setAttribute('aria-expanded', 'false');
-        }
-
-        btn.addEventListener('click', function (e) {
-            e.stopPropagation();
-            isOpen ? closePanel() : openPanel();
-        });
-
-        close.addEventListener('click', closePanel);
-
-        document.addEventListener('click', function (e) {
-            if (isOpen && !panel.contains(e.target)) closePanel();
-        });
-
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && isOpen) closePanel();
-        });
-    })();
-
-    (function () {
-        var btn = document.getElementById('sidebar-toggle');
-        var html = document.documentElement;
-        function isCollapsed() { return html.classList.contains('sidebar-collapsed'); }
-        function updateBtn() {
-            btn.textContent = isCollapsed() ? '→' : '_';
-            btn.title = isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar';
-            btn.setAttribute('aria-label', isCollapsed() ? 'Expand sidebar' : 'Collapse sidebar');
-        }
-        updateBtn();
-        btn.addEventListener('click', function () {
-            html.classList.toggle('sidebar-collapsed');
-            localStorage.setItem('sidebar-collapsed', isCollapsed() ? '1' : '0');
-            updateBtn();
-        });
-    })();
-
-    (function () {
-        var bar   = document.getElementById('doc-bar');
-        var crumb = document.getElementById('doc-bar-crumb');
-        if (!bar) return;
-
-        var content  = document.getElementById('content');
-        var article  = document.querySelector('article');
-        var headings = Array.from(article.querySelectorAll('h1,h2,h3,h4,h5,h6'));
-
-        // Inject IDs and hover anchor links
-        headings.forEach(function (h) {
-            var slug = h.textContent.trim()
-                .toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-')
-                .replace(/^-|-$/g, '');
-            h.id = slug;
-            var a = document.createElement('a');
-            a.className = 'heading-anchor';
-            a.href = '#' + slug;
-            a.innerHTML = h.innerHTML;
-            h.innerHTML = '';
-            h.appendChild(a);
-        });
-
-        // Update crumb with the last heading scrolled past (skip h1)
-        content.addEventListener('scroll', function () {
-            var scrollTop = content.scrollTop + 8;
-            var current = null;
-            headings.forEach(function (h) {
-                if (h.offsetTop <= scrollTop) current = h;
-            });
-            crumb.textContent = (current && current.tagName !== 'H1')
-                ? current.querySelector('.heading-anchor').textContent
-                : '';
-        });
-    })();
-    </script>
+    <script src="/app.js"></script>
 </body>
 </html>

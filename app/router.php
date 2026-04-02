@@ -61,5 +61,46 @@ if ($uri === '/raw') {
     exit;
 }
 
+// Export a docs folder as a zip download
+if ($uri === '/export') {
+    $requested = $_GET['folder'] ?? null;
+    if ($requested === null) {
+        http_response_code(400);
+        exit;
+    }
+    $fullPath = realpath('/var/www/docs/' . $requested);
+    if ($fullPath === false || strpos($fullPath, '/var/www/docs/') !== 0 || !is_dir($fullPath)) {
+        http_response_code(404);
+        exit;
+    }
+
+    $folderName = basename($fullPath);
+    $tmpFile    = tempnam(sys_get_temp_dir(), 'palantir_export_');
+    $zip        = new ZipArchive();
+
+    if ($zip->open($tmpFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+        http_response_code(500);
+        exit;
+    }
+
+    $it = new RecursiveIteratorIterator(
+        new RecursiveDirectoryIterator($fullPath, RecursiveDirectoryIterator::SKIP_DOTS)
+    );
+    foreach ($it as $file) {
+        if ($file->isFile()) {
+            $relativePath = str_replace('\\', '/', substr($file->getPathname(), strlen($fullPath) + 1));
+            $zip->addFile($file->getPathname(), $folderName . '/' . $relativePath);
+        }
+    }
+    $zip->close();
+
+    header('Content-Type: application/zip');
+    header('Content-Disposition: attachment; filename="' . $folderName . '.zip"');
+    header('Content-Length: ' . filesize($tmpFile));
+    readfile($tmpFile);
+    unlink($tmpFile);
+    exit;
+}
+
 // Everything else goes to index.php
 require __DIR__ . '/index.php';
