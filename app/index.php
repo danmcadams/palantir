@@ -178,7 +178,6 @@ if ($requestedFile !== null) {
             <span class="settings-title">Theme</span>
             <button id="settings-close" class="settings-close" aria-label="Close settings">✕</button>
         </div>
-        <a href="/?file=_user-guide.md" class="settings-guide-link">User Guide</a>
         <div class="theme-grid">
             <button class="theme-card" data-theme="light" aria-label="Light theme">
                 <div class="theme-card-preview">
@@ -273,7 +272,7 @@ if ($requestedFile !== null) {
                             <span>reference images as <code>/docs/path/to/image.png</code></span>
                         </div>
                     </div>
-                    <a href="/?file=_user-guide.md" class="home-guide-link">Using with Claude →</a>
+                    <a href="/?file=_claude-guide.md" class="home-guide-link">Using with Claude →</a>
                     </div><!-- /default-home -->
                 </div>
             <?php endif; ?>
