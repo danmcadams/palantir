@@ -235,7 +235,7 @@
     var headings = Array.from(article.querySelectorAll('h2, h3'));
     if (headings.length < 2) return;
 
-    var content  = document.getElementById('content');
+    var scroller = document.getElementById('content-wrapper');
     var tocInner = tocPanel.querySelector('.toc-inner');
 
     var label = document.createElement('span');
@@ -250,8 +250,8 @@
         a.textContent = h.textContent.trim();
         a.addEventListener('click', function (e) {
             e.preventDefault();
-            var top = h.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top - 24;
-            content.scrollTo({ top: top, behavior: 'smooth' });
+            var top = h.getBoundingClientRect().top + scroller.scrollTop - scroller.getBoundingClientRect().top - 24;
+            scroller.scrollTo({ top: top, behavior: 'smooth' });
         });
         tocInner.appendChild(a);
         return { heading: h, link: a };
@@ -259,11 +259,11 @@
 
     tocPanel.classList.add('is-visible');
 
-    content.addEventListener('scroll', function () {
-        var contentTop = content.getBoundingClientRect().top;
+    scroller.addEventListener('scroll', function () {
+        var scrollerTop = scroller.getBoundingClientRect().top;
         var current = null;
         headings.forEach(function (h) {
-            if (h.getBoundingClientRect().top - contentTop <= 60) current = h;
+            if (h.getBoundingClientRect().top - scrollerTop <= 60) current = h;
         });
         links.forEach(function (item) {
             item.link.classList.toggle('is-active', item.heading === current);

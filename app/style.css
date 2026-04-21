@@ -605,12 +605,12 @@ ul.tree ul ul li a {
     flex: 1;
     display: flex;
     min-height: 0;
+    overflow-y: auto;
 }
 
 #content {
     flex: 1;
     padding: 0 3rem 2.5rem;
-    overflow-y: auto;
 }
 
 /* ── Table of Contents ───────────────────────────────── */
@@ -620,8 +620,10 @@ ul.tree ul ul li a {
     min-width: 320px;
     flex-shrink: 0;
     display: none;
-    overflow-y: auto;
     padding: 2.5rem 0;
+    align-self: flex-start;
+    position: sticky;
+    top: 0;
 }
 
 #toc-panel.is-visible {
