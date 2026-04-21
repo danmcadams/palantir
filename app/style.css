@@ -610,7 +610,8 @@ ul.tree ul ul li a {
 
 #content {
     flex: 1;
-    padding: 0 3rem 2.5rem;
+    min-width: 0;
+    padding: 0 3rem;
 }
 
 /* ── Table of Contents ───────────────────────────────── */
@@ -706,6 +707,7 @@ article,
 .home,
 p.empty {
     padding-top: 2.5rem;
+    padding-bottom: 4rem;
 }
 
 
