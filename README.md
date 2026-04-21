@@ -1,4 +1,4 @@
-# Markdown Planning Server
+# Gibson
 
 A local web server for reading and navigating markdown planning documents. Drop `.md` files in `docs/` and they appear instantly in a nestable sidebar. No restart needed.
 
