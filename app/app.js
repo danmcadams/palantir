@@ -209,16 +209,10 @@
 })();
 
 (function () {
-    var bar   = document.getElementById('doc-bar');
-    var crumb = document.getElementById('doc-bar-crumb');
-    if (!bar) return;
+    var article = document.querySelector('article');
+    if (!article) return;
 
-    var content  = document.getElementById('content');
-    var article  = document.querySelector('article');
-    var headings = Array.from(article.querySelectorAll('h1,h2,h3,h4,h5,h6'));
-
-    // Inject IDs and hover anchor links
-    headings.forEach(function (h) {
+    article.querySelectorAll('h1,h2,h3,h4,h5,h6').forEach(function (h) {
         var slug = h.textContent.trim()
             .toLowerCase()
             .replace(/[^a-z0-9]+/g, '-')
@@ -230,18 +224,6 @@
         a.innerHTML = h.innerHTML;
         h.innerHTML = '';
         h.appendChild(a);
-    });
-
-    // Update crumb with the last heading scrolled past (skip h1)
-    content.addEventListener('scroll', function () {
-        var scrollTop = content.scrollTop + 8;
-        var current = null;
-        headings.forEach(function (h) {
-            if (h.offsetTop <= scrollTop) current = h;
-        });
-        crumb.textContent = (current && current.tagName !== 'H1')
-            ? current.querySelector('.heading-anchor').textContent
-            : '';
     });
 })();
 
@@ -266,7 +248,6 @@
         a.className = 'toc-link toc-' + h.tagName.toLowerCase();
         a.href = '#' + h.id;
         a.textContent = h.textContent.trim();
-        a.title = h.textContent.trim();
         a.addEventListener('click', function (e) {
             e.preventDefault();
             var top = h.getBoundingClientRect().top + content.scrollTop - content.getBoundingClientRect().top - 24;

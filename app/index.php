@@ -177,7 +177,7 @@ if ($requestedFile !== null) {
     </nav>
     <div class="sidebar-footer">
         <button id="settings-btn" class="settings-btn" aria-label="Settings" title="Settings" aria-expanded="false">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                  stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
@@ -299,15 +299,6 @@ if ($requestedFile !== null) {
             <div class="toc-inner"></div>
         </nav>
     </div>
-    <?php if ($requestedFile !== null && !$error): ?>
-        <div id="doc-bar">
-            <span id="doc-bar-crumb"></span>
-            <?php $nativeTypes = ['pdf', 'png', 'jpg', 'jpeg', 'gif', 'webp', 'svg']; ?>
-            <?php $docBarHref = in_array(strtolower($ext), $nativeTypes) ? '/docs/' . htmlspecialchars($requestedFile) : '/raw?file=' . urlencode($requestedFile); ?>
-            <a id="doc-bar-type" href="<?= $docBarHref ?>" target="_blank" rel="noopener"><?= $title ?>
-                .<?= htmlspecialchars(strtolower($ext)) ?></a>
-        </div>
-    <?php endif; ?>
 </div>
 <?php if ($hasMermaid ?? false): ?>
 <script src="/vendor/mermaid.min.js"></script>
